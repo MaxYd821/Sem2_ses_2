@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Semana2_sesion_2</string>
+    <string name="email">Email</string>
+    <string name="astqriscos">*******</string>
+    <string name="mi_primera_aplicaci_n">Mi Primera Aplicación</string>
+    <string name="iniciar_sesi_n">Iniciar Sesión</string>
+    <string name="crear_cuenta">Crear Cuenta</string>
+</resources>
