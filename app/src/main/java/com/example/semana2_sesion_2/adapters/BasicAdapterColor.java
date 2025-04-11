@@ -43,15 +43,14 @@ public class BasicAdapterColor extends RecyclerView.Adapter<BasicAdapterColor.Ba
     public void onBindViewHolder(@NonNull BasicViewHolder holder, int position) {
         TextView tvname = holder.itemView.findViewById(R.id.tvname);
         TextView tvhex = holder.itemView.findViewById(R.id.tvhex);
+        Colorclass color = data.get(position);
         FrameLayout flcirculo = holder.itemView.findViewById(R.id.flcirculo);
         Context context = holder.itemView.getContext();
         GradientDrawable drawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.round_border);
-        String name = data.get(position).getName();
-        String hex = data.get(position).getHex();
-        tvname.setText(name);
-        tvhex.setText(hex);
+        tvname.setText(color.getName());
+        tvhex.setText(color.getHex());
         drawable = (GradientDrawable) drawable.mutate();
-        drawable.setColor(Color.parseColor(hex));
+        drawable.setColor(Color.parseColor(color.getHex()));
         flcirculo.setBackground(drawable);
     }
 
