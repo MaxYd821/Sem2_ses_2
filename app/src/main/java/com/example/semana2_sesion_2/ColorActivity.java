@@ -10,10 +10,17 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.semana2_sesion_2.Services.ColorService;
 import com.example.semana2_sesion_2.adapters.BasicAdapterColor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ColorActivity extends AppCompatActivity {
     @Override
@@ -27,60 +34,24 @@ public class ColorActivity extends AppCompatActivity {
             return insets;
         });
         List<Colorclass> data = new ArrayList<>();
-        Colorclass color1 = new Colorclass();
-        Colorclass color2 = new Colorclass();
-        Colorclass color3 = new Colorclass();
-        Colorclass color4 = new Colorclass();
-        Colorclass color5 = new Colorclass();
-        Colorclass color6 = new Colorclass();
-        Colorclass color7 = new Colorclass();
-        Colorclass color8 = new Colorclass();
-        Colorclass color9 = new Colorclass();
-        Colorclass color10 = new Colorclass();
-        Colorclass color11 = new Colorclass();
-        Colorclass color12 = new Colorclass();
-        Colorclass color13 = new Colorclass();
-        Colorclass color14 = new Colorclass();
-        Colorclass color15 = new Colorclass();
-        Colorclass color16 = new Colorclass();
-        Colorclass color17 = new Colorclass();
-        Colorclass color18 = new Colorclass();
-        color1.setName("Lavender");
-        color1.setHex("#E6E6FA");
-        color2.setName("Thistle");
-        color2.setHex("#D8BFD8");
-        color3.setName("Plum");
-        color3.setHex("#DDA0DD");
-        color4.setName("Violet");
-        color4.setHex("#EE82EE");
-        color5.setName("Orchid");
-        color5.setHex("#DA70D6");
-        color6.setName("Fuchsia");
-        color6.setHex("#FF00FF");
-        color7.setName("MediumOrchid");
-        color7.setHex("#BA55D3");
-        color8.setName("MediumPurple");
-        color8.setHex("#9370DB");
-        color9.setName("RebeccaPurple");
-        color9.setHex("#663399");
-        color10.setName("BlueViolet");
-        color10.setHex("#8A2BE2");
-        color11.setName("DarkViolet");
-        color11.setHex("#9400D3");
-        color12.setName("DarkOrchid");
-        color12.setHex("#9932CC");
-        color13.setName("DarkMagenta");
-        color13.setHex("#8B008B");
-        color14.setName("Purple");
-        color14.setHex("#800080");
-        color15.setName("Indigo");
-        color15.setHex("#4B0082");
-        color16.setName("SlateBlue");
-        color16.setHex("#6A5ACD");
-        color17.setName("DarkSlateBlue");
-        color17.setHex("#483D8B");
-        color18.setName("MediumSlateBlue");
-        color18.setHex("#7B68EE");
+        Colorclass color1 = new Colorclass("Lavender","#E6E6FA");
+        Colorclass color2 = new Colorclass("Thistle","#D8BFD8");
+        Colorclass color3 = new Colorclass("Plum","#DDA0DD");
+        Colorclass color4 = new Colorclass("Violet","#EE82EE");
+        Colorclass color5 = new Colorclass("Orchid","#DA70D6");
+        Colorclass color6 = new Colorclass("Fuchsia","#FF00FF");
+        Colorclass color7 = new Colorclass("MediumOrchid","#BA55D3");
+        Colorclass color8 = new Colorclass("MediumPurple","#9370DB");
+        Colorclass color9 = new Colorclass("RebeccaPurple","#663399");
+        Colorclass color10 = new Colorclass("BlueViolet","#8A2BE2");
+        Colorclass color11 = new Colorclass("DarkViolet","#9400D3");
+        Colorclass color12 = new Colorclass("DarkOrchid","#9932CC");
+        Colorclass color13 = new Colorclass("DarkMagenta","#8B008B");
+        Colorclass color14 = new Colorclass("Purple","#800080");
+        Colorclass color15 = new Colorclass("Indigo","#4B0082");
+        Colorclass color16 = new Colorclass("SlateBlue","#6A5ACD");
+        Colorclass color17 = new Colorclass("DarkSlateBlue","#483D8B");
+        Colorclass color18 = new Colorclass("MediumSlateBlue","#7B68EE");
 
         data.add(color1);
         data.add(color2);
@@ -101,9 +72,33 @@ public class ColorActivity extends AppCompatActivity {
         data.add(color17);
         data.add(color18);
 
+
         RecyclerView rvBasic = findViewById(R.id.rvBasiccolor);
         rvBasic.setLayoutManager(new LinearLayoutManager(this));
-        BasicAdapterColor adapter = new BasicAdapterColor(data);
-        rvBasic.setAdapter(adapter);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.csscolorsapi.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ColorService service = retrofit.create(ColorService.class);
+
+        service.getColors().enqueue(new Callback<ColorResponse>(){
+
+            @Override
+            public void onResponse(Call<ColorResponse> call, Response<ColorResponse> response) {
+                List<Colorclass> data1 = response.body().colors;
+                BasicAdapterColor adapter = new BasicAdapterColor(data1);
+                rvBasic.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<ColorResponse> call, Throwable throwable) {
+            }
+        });
+
+                //RecyclerView rvBasic = findViewById(R.id.rvBasiccolor);
+                //rvBasic.setLayoutManager(new LinearLayoutManager(this));
+                //BasicAdapterColor adapter = new BasicAdapterColor(data);
+                //rvBasic.setAdapter(adapter);
     }
 }
