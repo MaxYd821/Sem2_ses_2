@@ -10,10 +10,17 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.semana2_sesion_2.Services.ColorService;
 import com.example.semana2_sesion_2.adapters.BasicAdapterColor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ColorActivity extends AppCompatActivity {
     @Override
@@ -65,9 +72,36 @@ public class ColorActivity extends AppCompatActivity {
         data.add(color17);
         data.add(color18);
 
+
         RecyclerView rvBasic = findViewById(R.id.rvBasiccolor);
         rvBasic.setLayoutManager(new LinearLayoutManager(this));
-        BasicAdapterColor adapter = new BasicAdapterColor(data);
-        rvBasic.setAdapter(adapter);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://run.mocky.io")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ColorService service = retrofit.create(ColorService.class);
+
+        service.getColors().enqueue(new Callback<List<Colorclass>>() {
+            @Override
+            public void onResponse(Call<List<Colorclass>> call, Response<List<Colorclass>> response) {
+                List<Colorclass> data1 = new ArrayList<>();
+                data1 = response.body();
+
+                BasicAdapterColor adapter = new BasicAdapterColor(data1);
+                rvBasic.setAdapter(adapter);
+            }
+
+            @Override
+            //ingresa si no ingresó al servidor, ejm: servidor apagado
+            public void onFailure(Call<List<Colorclass>> call, Throwable throwable) {
+
+            }
+        });
+
+        //RecyclerView rvBasic = findViewById(R.id.rvBasiccolor);
+        //rvBasic.setLayoutManager(new LinearLayoutManager(this));
+        //BasicAdapterColor adapter = new BasicAdapterColor(data);
+        //rvBasic.setAdapter(adapter);
     }
 }
